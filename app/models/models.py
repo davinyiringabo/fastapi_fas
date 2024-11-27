@@ -14,6 +14,15 @@ class ApplicationStatus(enum.Enum):
     APPROVED = "approved"
     REJECTED = "rejected"
 
+class EconomicStatus(enum.Enum):
+    POOR = "poor"
+    MEDIUM = "medium"
+    RICH = "rich"
+
+class DisabilityStatus(enum.Enum):
+    DISABLED = "disabled"
+    NOT_DISABLED = "not_disabled"
+
 class User(Base):
     __tablename__ = "users"
 
@@ -31,11 +40,20 @@ class User(Base):
     
     applications = relationship("FinancialAid", back_populates="student")
 
+class Student(User):
+    __tablename__ = "students"
+    id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    age = Column(Integer)
+    school = Column(String)
+    location = Column(String)
+    economic_status = Column(Enum(EconomicStatus))
+    disability_status = Column(Enum(DisabilityStatus))
 class FinancialAid(Base):
     __tablename__ = "financial_aids"
 
     id = Column(Integer, primary_key=True, index=True)
     student_id = Column(Integer, ForeignKey("users.id"))
+    student = relationship("Student", back_populates="applications")
     amount = Column(Integer)
     purpose = Column(String)
     status = Column(Enum(ApplicationStatus), default=ApplicationStatus.PENDING)

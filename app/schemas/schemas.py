@@ -1,7 +1,7 @@
 from pydantic import BaseModel, EmailStr, Field
 from typing import Optional
 from datetime import datetime
-from ..models.models import UserType, ApplicationStatus
+from ..models.models import UserType, ApplicationStatus, EconomicStatus, DisabilityStatus
 
 class UserBase(BaseModel):
     email: EmailStr
@@ -24,6 +24,27 @@ class UserCreate(BaseModel):
     user_type: UserType = Field(..., 
         description="Must be 'admin' for this endpoint",
         example=UserType.ADMIN
+    )
+class StudentCreate(UserCreate):
+    age: EmailStr = Field(..., 
+        description="Age of the student",
+        example="18"
+    )
+    school: str = Field(..., 
+        description="Most Recent School of the student",
+        example="Rwanda Coding Academy"
+    )
+    location: str = Field(..., 
+        description="Residential Location of the student",
+        example="Gikondo"
+    )
+    economic_status: UserType = Field(..., 
+        description="Economic status of the student's family",
+        example=EconomicStatus.MEDIUM
+    )
+    disability_status: UserType = Field(..., 
+        description="Diability status of the student",
+        example=DisabilityStatus.DISABLED
     )
 
 class User(UserBase):
